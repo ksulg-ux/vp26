@@ -2,15 +2,19 @@
 <html lang="et">
 <head>
 	<meta charset="utf-8">
-	<title>Kaisa Sulg, veebiprogrammeerimine</title>
+	<title>Andrus Rinde, veebiprogrammeerimine</title>
 </head>
 <body>
 	<img src="pic/veebiprogrammeerimine_2026_AA.png" alt="banner">	<h1>Kaisa Sulg, veebiprogrammeerimine</h1>
-	 <p>See leht on loodud veebiprogrammeerimise kursusel <a href="https://www.tlu.ee">Tallinna ülikoolis</a> ning ei sislda tõsiseltvõetavat sisu!</p>
-	<p>Esialgu tutvusime lihtsalt HTML keelega, peatselt programmeerime.</p>
-	<hr><table><tr>
-	<td><img src="pic/avaleht.jpg" alt="Piltding-left:20px;"></td>
-	<td style="padding-left:20px; vertical-align:top;"><p>Täna on <%= day %>.</p><p>Kuupäev on <%= date %>.</p><p>Leht avati kell <%= time %>.</p><p><a href="/vanasona">Vaata vanasõna</a></p><p><a href="/minust">Miks tulin TLÜ-sse </a></p><p><a href="/regvisit">Külastuse registreerimine</a></p><p><a href="/lastvisit">Viimane külastus</a></p>
-	</td></tr></table>
+	 <p>See leht on loodud veebiprogrammeerimise kursusel <a href="https://www.tlu.ee">Tallinna Ülikoolis</a> ning ei sisalda tõsiseltvõetavat sisu!</p>
+	<p>Esialgu tutvusime lihtsalt HTML keelega, nüüd juba programmeerime.</p>
+	<hr>
+	<p>Täna on <%= day %>, <%= date %>, kell oli lehe avamise hetkel: <%= time %>.</p>
+	<ul>
+		<li><a href="/tlu">Natuke Tallinna Ülikoolist</a></li>
+		<li><a href="/vanasona">Tänane vanasõna</a></li>
+		<li><a href="/regvisit">Külastuse registreerimine</a></li>
+		<li><a href="/eestifilm">Eesti film</a></li>
+	</ul>
 </body>
 </html>
