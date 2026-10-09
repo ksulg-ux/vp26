@@ -80,7 +80,7 @@ app.get('/eestifilm/film_inimesed', async (req, res)=>{
 			database: 'if26_kaisa_sulg'
 		});
 		//defineerime SQL pÃ¤ringu
-		let sqlReq = 'SELECT * FROM person';
+		let sqlReq = 'SELECT person.*, picture.file_name FROM person LEFT Join picture ON picture.person_id = person.id';
 		//kÃ¤ivitame pÃ¤ringu
 		const [sqlRes] = await conn.execute(sqlReq);
 		console.log(sqlRes);

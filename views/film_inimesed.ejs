@@ -2,7 +2,7 @@
 <html lang="et">
 <head>
 	<meta charset="utf-8">
-	<title>Andrus Rinde, veebiprogrammeerimine</title>
+	<title>Kaisa Sulg, veebiprogrammeerimine</title>
 </head>
 <body>
 	<img src="../pic/veebiprogrammeerimine_2026_AA.png" alt="banner">
@@ -15,9 +15,17 @@
 	<hr>
 	<h2>Siit andmebaasist leitavad filmiinimesed</h2>
 	<ol>
-		<% personList.forEach(function(person) { %>
-		<li><%= person.first_name%> <%= person.last_name %>, sündinud <%= person.born %>.</li>
-		<% }); %>
-	</ol>
+    <% personList.forEach(function(person) { %>
+
+    <li>
+        <%= person.first_name %>
+        <%= person.last_name %>,
+        sündinud <%= person.born %>.
+    </li>
+
+	 <img src="/<%= person.file_name %>" alt="<%person.first_name %>" width="150">
+
+    <% }); %>
+</ol>
 </body>
 </html>
