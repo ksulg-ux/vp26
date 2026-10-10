@@ -98,7 +98,13 @@ app.get('/eestifilm/film_inimesed', async (req, res)=>{
 });
 
 app.get('/eestifilm/lisa_film_inimesed', (req, res)=>{
-	res.render('lisa_film_inimesed', {notice: 'Ootan sisestust!'});
+    res.render('lisa_film_inimesed', {
+        notice: 'Ootan sisestust!',
+        firstName: '',
+        lastName: '',
+        bornDate: '',
+        deceasedDate: ''
+    });
 });
 
 app.post('/eestifilm/lisa_film_inimesed', async (req, res)=>{
@@ -106,8 +112,24 @@ app.post('/eestifilm/lisa_film_inimesed', async (req, res)=>{
 	//kontrollime andmeid, teeme kÃµige lahjema kontrolli
 	let deceasedDate = null;
 	if(req.body.deceasedInput != ''){
-		deceasedDate = req.body.deceasedInput;
-	}
+		deceasedDate = new Date(req.body.deceasedInput);
+		
+		if (
+        isNaN(deceasedDate.getTime()) ||
+        deceasedDate > timeNow ||
+        deceasedDate < bornDate
+    ){
+        return res.render('lisa_film_inimesed', {
+            notice: 'Surmakuupäev pole korrektne!',
+            firstName: req.body.firstNameInput,
+            lastName: req.body.lastNameInput,
+            bornDate: req.body.bornInput,
+            deceasedDate: req.body.deceasedInput
+        });
+    }
+
+    deceasedDate = req.body.deceasedInput;
+}
 	
 	//sÃ¼nnikuupÃ¤eva vÃµrdlemine
 	const bornDate = new Date(req.body.bornInput);
@@ -145,6 +167,125 @@ app.post('/eestifilm/lisa_film_inimesed', async (req, res)=>{
 	}	
 });
 
+app.get('/eestifilm/lisa_film', (req, res) => {
+    res.render('lisa_film', {
+        notice: 'Ootan sisestust!',
+        title: '',
+        releaseYear: '',
+        duration: '',
+        description: ''
+    });
+});
+
+app.post('/eestifilm/lisa_film', async (req, res) => {
+
+    const currentYear = new Date().getFullYear();
+
+    if (
+        !req.body.titleInput ||
+        req.body.releaseYearInput < 1895 ||
+        req.body.releaseYearInput > currentYear ||
+        req.body.durationInput <= 0
+    ) {
+
+        return res.render('lisa_film', {
+            notice: 'Andmed pole korrektsed!',
+            title: req.body.titleInput,
+            releaseYear: req.body.releaseYearInput,
+            duration: req.body.durationInput,
+            description: req.body.descriptionInput
+        });
+    }
+
+    let conn;
+
+    try {
+        conn = await mysql.createConnection({
+            host: process.env.DB_HOST,
+            user: process.env.DB_USER,
+            password: process.env.DB_PASS,
+            database: 'if26_kaisa_sulg'
+        });
+
+        let sqlReq = `
+            INSERT INTO movie
+            (title, release_year, duration_minutes, description)
+            VALUES (?, ?, ?, ?)
+        `;
+
+        await conn.execute(sqlReq, [
+            req.body.titleInput,
+            req.body.releaseYearInput,
+            req.body.durationInput,
+            req.body.descriptionInput
+        ]);
+
+        res.render('lisa_film', {
+            notice: 'Film salvestatud!',
+            title: '',
+            releaseYear: '',
+            duration: '',
+            description: ''
+        });
+
+    } catch(err) {
+        console.log(err);
+    } finally {
+        if(conn){
+            await conn.end();
+        }
+    }
+});
+
+app.get('/eestifilm/lisa_zanr', (req, res) => {
+    res.render('lisa_zanr', {
+        notice: 'Ootan sisestust!',
+        genreName: '',
+		description: ''
+    });
+});
+
+app.post('/eestifilm/lisa_zanr', async (req, res) => {
+
+    if(!req.body.genreInput){
+        return res.render('lisa_zanr', {
+            notice: 'Žanri nimi puudub!',
+            genreName: req.body.genreInput,
+			description: req.body.descriptionInput
+        });
+    }
+
+    let conn;
+
+    try{
+        conn = await mysql.createConnection({
+            host: process.env.DB_HOST,
+            user: process.env.DB_USER,
+            password: process.env.DB_PASS,
+            database: 'if26_kaisa_sulg'
+        });
+
+        let sqlReq = 'INSERT INTO genre (name, description) VALUES (?, ?)';
+
+        await conn.execute(sqlReq, [
+			req.body.genreInput,
+			req.body.descriptionInput
+		]);
+
+        res.render('lisa_zanr', {
+            notice: 'Žanr salvestatud!',
+            genreName: '',
+			description: ''
+        });
+
+    } catch(err){
+        console.log(err);
+    } finally{
+        if(conn){
+            await conn.end();
+        }
+    }
+});
 
 
 app.get('/minust', (req, res) => {

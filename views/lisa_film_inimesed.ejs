@@ -2,7 +2,7 @@
 <html lang="et">
 <head>
 	<meta charset="utf-8">
-	<title>Andrus Rinde, veebiprogrammeerimine</title>
+	<title>Kaisa Sulg, veebiprogrammeerimine</title>
 </head>
 <body>
 	<img src="../pic/veebiprogrammeerimine_2026_AA.png" alt="banner">
@@ -16,16 +16,16 @@
 	<h2>Lisa filmiinimene</h2>
 	<form method="POST">
 		<label for="firstNameInput">Filmiinimese eesnimi</label>
-		<input id="firstNameInput" name="firstNameInput" type="text" placeholder="Eesnimi">
+		<input id="firstNameInput" name="firstNameInput" type="text" placeholder="Eesnimi" value="<%= firstName %>">
 		<br>
 		<label for="lastNameInput">Filmiinimese perekonnanimi</label>
-		<input id="lastNameInput" name="lastNameInput" type="text" placeholder="Perekonnanimi">
+		<input id="lastNameInput" name="lastNameInput" type="text" placeholder="Perekonnanimi" value="<%= lastName %>">
 		<br>
 		<label for="bornInput">Filmiinimese sünnikuupäev</label>
-		<input id="bornInput" name="bornInput" type="date">
+		<input id="bornInput" name="bornInput" type="date" value="<%= bornDate %>>
 		<br>
 		<label for="deceasedInput">Filmiinimese surmakuupäev</label>
-		<input id="deceasedInput" name="deceasedInput" type="date">
+		<input id="deceasedInput" name="deceasedInput" type="date"<%= deceasedDate %>">
 		<br>
 		<input id="personSubmit" name="personSubmit" type="submit" value="Salvesta">
 	</form>

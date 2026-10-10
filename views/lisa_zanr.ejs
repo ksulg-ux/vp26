@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+	<meta charset="utf-8">
+	<title>Kaisa Sulg, veebiprogrammeerimine</title>
+</head>
+<body>
+	<img src="../pic/veebiprogrammeerimine_2026_AA.png" alt="banner">
+	<h1>Eesti film</h1>
+	<p>Siin saab lisada žanreid.</p>
+	<ul>
+		<li><a href="/">Avalehele</a></li>
+		<li><a href="/eestifilm">Eesti filmi avalehele</a></li>
+	</ul>
+	<hr>
+	<h2>Lisa žanr</h2>
+	
+	<form method="POST">
+
+    <label for="nameInput">Žanri nimi</label>
+    <input id="nameInput" name="nameInput" type="text" placeholder="Nimi" value="<%= genreName %>">
+
+    <br>
+
+    <label for="descriptionInput">Kirjeldus</label>
+    <textarea id="descriptionInput" name="descriptionInput" placeholder="Kirjeldus"><%= description %></textarea>
+
+    <br>
+
+    <input type="submit" value="Salvesta">
+
+</form>
+
+<p><%= notice %></p>
