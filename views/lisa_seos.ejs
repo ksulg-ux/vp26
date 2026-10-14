@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+	<meta charset="utf-8">
+	<title>Kaisa Sulg, veebiprogrammeerimine</title>
+</head>
+<body>
+	<img src="../pic/veebiprogrammeerimine_2026_AA.png" alt="banner">
+
+<h2>Lisa filmiinimese seos</h2>
+
+<p><%= notice %></p>
+
+<form action="/eestifilm/lisa_seos" method="POST">
+
+    <label>Inimene:</label>
+    <select name="personInput" required>
+        <option selected disabled>Vali inimene</option>
+
+        <% persons.forEach(person => { %>
+            <option value="<%= person.id %>">
+                <%= person.first_name %> <%= person.last_name %>
+            </option>
+        <% }) %>
+
+    </select>
+
+    <br><br>
+
+    <label>Film:</label>
+    <select name="movieInput" required>
+        <option selected disabled>Vali film</option>
+
+        <% movies.forEach(movie => { %>
+            <option value="<%= movie.id %>">
+                <%= movie.title %>
+            </option>
+        <% }) %>
+
+    </select>
+
+    <br><br>
+
+    <label>Amet:</label>
+    <select id="professionInput" name="professionInput" required>
+        <option selected disabled>Vali amet</option>
+
+        <% professions.forEach(profession => { %>
+            <option value="<%= profession.id %>">
+                <%= profession.title %>
+            </option>
+        <% }) %>
+
+    </select>
+
+    <br><br>
+
+    <div id="roleDiv" style="display:none;">
+        <label>Tegelaskuju nimi:</label>
+        <input type="text" name="roleInput">
+    </div>
+
+    <br>
+
+    <button type="submit">
+        Salvesta seos
+    </button>
+
+</form>
+
+<script>
+document.getElementById("professionInput").addEventListener("change", function(){
+
+    const selectedText =
+        this.options[this.selectedIndex].text.toLowerCase();
+
+    const roleDiv =
+        document.getElementById("roleDiv");
+
+    if(selectedText === "näitleja"){
+        roleDiv.style.display = "block";
+    } else {
+        roleDiv.style.display = "none";
+    }
+});
+</script>
+
+</body>
+</html>

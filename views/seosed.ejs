@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+	<meta charset="utf-8">
+	<title>Kaisa Sulg, veebiprogrammeerimine</title>
+</head>
+<body>
+	<img src="../pic/veebiprogrammeerimine_2026_AA.png" alt="banner">
+<body>
+
+<h2>Filmi seosed</h2>
+
+<table border="1">
+
+<tr>
+    <th>Inimene</th>
+    <th>Film</th>
+    <th>Amet</th>
+    <th>Tegelaskuju</th>
+</tr>
+
+<% relations.forEach(relation => { %>
+
+<tr>
+    <td>
+        <%= relation.first_name %>
+        <%= relation.last_name %>
+    </td>
+
+    <td>
+        <%= relation.title %>
+    </td>
+
+    <td>
+        <%= relation.profession_title %>
+    </td>
+
+    <td>
+        <%= relation.character_name || "-" %>
+    </td>
+
+</tr>
+
+<% }) %>
+
+</table>
+
+</body>
+
+</html>
