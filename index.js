@@ -18,15 +18,23 @@ app.set('view engine', 'ejs');
 //muudan "public" veebiserverile kättesaadavaks
 app.use(express.static('public'));
 //hakkame päringuid parsima
-app.use(bodyparser.urlencoded({extended: false}));
+app.use(bodyparser.urlencoded({extended: true}));
 
 //marsruudid
-app.get('/', (req, res)=>{
+app.get('/', async (req, res)=>{
 	//res.send('Express.js veeb käivitus!')
 	const day = dateTime.weekdayET();
 	const date = dateTime.dateET();
 	const time = dateTime.timeET();
-	res.render('index', {day: day, date: date, time: time});
+	conn = await mysql.createConnection({
+			host: process.env.DB_HOST,
+			user: process.env.DB_USER,
+			password: process.env.DB_PASS,
+			database: 'if26_kaisa_sulg'
+	});
+	const sqlReq = 'SELECT filename, alttext FROM galleryphotos WHERE id=(SELECT MAX(id) FROM galleryphotos WHERE privacy=? AND deleted IS NULL)';
+	const [result] = await conn.execute(sqlReq, [1]);
+	res.render('index', {day: day, date: date, time: time}, latestPhoto: result[0]);
 });
 
 app.get('/vanasona', async (req, res)=>{
@@ -42,65 +50,17 @@ app.get('/vanasona', async (req, res)=>{
 	}
 });
 
-/* app.get('/regvisit', (req, res) => {
-	res.render('regvisit');
-});
-
-app.post('/regvisit', async (req, res) => {
-    console.log(req.body);
-
-    const date = dateTime.dateET();
-    const time = dateTime.timeET();
-
-    try {
-        await fs.open(regTextRef, 'a');
-        await fs.appendFile(
-            regTextRef,
-            req.body.nameInput + ',' + date + ',' + time + ';'
-        );
-        res.render('regvisit');
-    }
-    catch (err) {
-        console.log(err);
-        res.render('regvisit');
-    }
-}); */
-
 app.get('/minust', (req, res) => {
 res.render('minust');
 });
-
-/* app.get('/lastvisit', async (req, res) => {
-    try {
-        const data = await fs.readFile(regTextRef, 'utf8');
-
-        let visitList = data.split(';');
-
-        let lastVisit = visitList[visitList.length - 2];
-
-        let visitData = lastVisit.split(',');
-
-        res.render('lastvisit', {
-            name: visitData[0],
-            date: visitData[1],
-            time: visitData[2]
-        });
-    }
-    catch (err) {
-        console.log(err);
-        res.render('lastvisit', {
-            name: 'puudub',
-            date: 'puudub',
-            time: 'puudub'
-        });
-    }
-});
- */
  
 const eestifilmRouter = require('./routes/eestifilmRoutes');
 app.use('/eestifilm', eestifilmRouter);
 
 const visitRouter = require('./routes/visitRoutes');
 app.use('/', visitRouter);
+
+const galleryPhotoUploadRouter = require('./routes/galleryPhotoUploadRoutes');
+app.use('/galleryphotoupload', galleryPhotoUploadRouter);
 
 app.listen(5318);
