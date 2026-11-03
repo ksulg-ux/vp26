@@ -33,8 +33,8 @@ app.get('/', async (req, res)=>{
 			database: 'if26_kaisa_sulg'
 	});
 	const sqlReq = 'SELECT filename, alttext FROM galleryphotos WHERE id=(SELECT MAX(id) FROM galleryphotos WHERE privacy=? AND deleted IS NULL)';
-	const [result] = await conn.execute(sqlReq, [1]);
-	res.render('index', {day: day, date: date, time: time}, latestPhoto: result[0]);
+	const [result] = await conn.execute(sqlReq, [3]);
+	res.render('index', {day: day, date: date, time: time, latestPhoto: result.length > 0 ? result[0] : null});
 });
 
 app.get('/vanasona', async (req, res)=>{
@@ -62,5 +62,8 @@ app.use('/', visitRouter);
 
 const galleryPhotoUploadRouter = require('./routes/galleryPhotoUploadRoutes');
 app.use('/galleryphotoupload', galleryPhotoUploadRouter);
+
+const galleryRouter = require('./routes/galleryRoutes');
+app.use('/fotogalerii', galleryRouter);
 
 app.listen(5318);
