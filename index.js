@@ -37,6 +37,14 @@ app.get('/', async (req, res)=>{
 	res.render('index', {day: day, date: date, time: time, latestPhoto: result.length > 0 ? result[0] : null});
 });
 
+app.get('/home', async (req, res)=>{
+	res.render('home');
+});
+
+app.get('/logout', async (req, res)=>{
+	res.redirect('/');
+});
+
 app.get('/vanasona', async (req, res)=>{
 	try{
 		const data = await fs.readFile(textRef, 'utf8');
@@ -66,4 +74,10 @@ app.use('/galleryphotoupload', galleryPhotoUploadRouter);
 const galleryRouter = require('./routes/galleryRoutes');
 app.use('/fotogalerii', galleryRouter);
 
-app.listen(5318);
+const signupRouter = require('./routes/signupRoutes');
+app.use('/signup', signupRouter);
+
+const signinRouter = require('./routes/signinRoutes');
+app.use('/signin', signinRouter);
+
+app.listen(5388);
