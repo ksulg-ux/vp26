@@ -6,6 +6,11 @@
 </head>
 <body>
 	<img src="../pic/veebiprogrammeerimine_2026_AA.png" alt="banner">
+	<div class="userinfo">
+		<% if(firstName){ %>
+			Kasutaja: <strong><%= firstName %> <%= lastName %></strong>
+		<% } %>
+	</div>
 	<h1>Galleriipiltide üleslaadimine</h1>
 	<p>Siin saab galeriisse fotosid laadida.</p>
 	<ul>

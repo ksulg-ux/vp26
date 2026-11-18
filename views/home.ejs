@@ -6,13 +6,21 @@
 </head>
 <body>
 	<img src="pic/veebiprogrammeerimine_2026_AA.png" alt="banner">	<h1>Kaisa Sulg, veebiprogrammeerimine</h1>
+
+	<% if(firstName){ %>
+		<p>
+			<strong>
+				Tere, <%= firstName %> <%= lastName %>!
+			</strong>
+		</p>
+	<% } %>
 	 
-	<ul>
-		<li><a href="/logout">Logi välja</a></li>
-		<br>
-		<li><a href="/galleryphotoupload">Fotode üleslaadimine galeriisse</a></li>
-		<li><a href="/fotogalerii">Fotogalerii</a></li>
-	</ul>
+<ul>
+    <li><a href="/logout">Logi välja</a></li>
+    <li><a href="/galleryphotoupload">Fotode üleslaadimine galeriisse</a></li>
+    <li><a href="/fotogalerii">Fotogalerii</a></li>
+    <li><a href="/mygallery">Enda fotogalerii</a></li>
+</ul>
 	
 	<hr>
 

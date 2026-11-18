@@ -3,39 +3,19 @@
 <head>
 	<meta charset="utf-8">
 	<title>Kaisa Sulg, veebiprogrammeerimine</title>
-</head>
-
- <style>
-        .gallery {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .photo {
-            width: 300px;
-        }
-
-        .photo img {
-            width: 300px;
-            height: 220px;
-            object-fit: cover;
-            border-radius: 10px;
-            display: block;
-        }
-
-        .caption {
-            margin-top: 5px;
-            text-align: center;
-        }
-    </style>
+	<link  rel="styleSheet" href="/style/gallery.css">
+	<script src="/script/gallery.js" defer></script>
 </head>
 
 <body>
     <img src="/pic/veebiprogrammeerimine_2026_AA.png" alt="banner">
 
     <h1>Kaisa Sulg, veebiprogrammeerimine</h1>
-
+	<div class="userinfo">
+		<% if(firstName){ %>
+			Kasutaja: <strong><%= firstName %> <%= lastName %></strong>
+		<% } %>
+	</div>
     <p>
         <a href="/home">Tagasi avalehele</a>
 		<li><a href="/logout">Logi välja</a></li>
@@ -44,30 +24,24 @@
     <p>
         <a href="/galleryphotoupload">Fotode üleslaadimine galeriisse</a>
     </p>
-
+	
     <hr>
-
     <h2>Pildigalerii</h2>
-
-    <div class="gallery">
-
-        <% photos.forEach(photo => { %>
-
-            <div class="photo">
-
-                <img
-                    src="/gallery/normal/<%= photo.filename %>"
-                    alt="<%= photo.alttext || 'Foto' %>">
-
-                <div class="caption">
-                    <%= photo.alttext || 'Foto' %>
-                </div>
-
-            </div>
-
-        <% }) %>
-
-    </div>
-
+	<hr>
+	<dialog id="modal" class="modalarea">
+		<span id="modalClose" class="modalclose">&times;</span>
+		<div class="modalhorizontal">
+			<div class="modalvertical">
+				<p id="modalCaption"></p>
+				<img id="modalImage" src="../pic/empty.png" alt="galeriipilt">
+			</div>
+		</div>
+	</dialog>
+	
+	<div id="gallery" class="gallery">
+		<% galleryData.forEach(function(image){ %>
+		  <img src="<%=imagehref%><%=image.src%>" alt="<%=image.alt%>" data-id="<%= image.id%>" data-filename="<%=image.src%>" class="thumbs">
+		<% }); %>
+	</div>
 </body>
 </html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+	<meta charset="utf-8">
+	<title>Kaisa Sulg, veebiprogrammeerimine</title>
+	<link  rel="styleSheet" href="/style/gallery.css">
+	<script src="/script/gallery.js" defer></script>
+</head>
+
+<body>
+    <img src="/pic/veebiprogrammeerimine_2026_AA.png" alt="banner">
+	<div class="userinfo">
+		<% if(firstName){ %>
+			Kasutaja: <strong><%= firstName %> <%= lastName %></strong>
+		<% } %>
+	</div>
+
+    <h1>Kaisa Sulg, veebiprogrammeerimine</h1>
+
+    <p>
+        <a href="/home">Tagasi avalehele</a>
+		<li><a href="/fotogalerii">Avalik galerii</a></li>
+		<li><a href="/logout">Logi välja</a></li>
+    </p>
+
+    <p>
+        <a href="/galleryphotoupload">Fotode üleslaadimine galeriisse</a>
+    </p>
+	
+    <hr>
+    <h2>Minu galerii</h2>
+	<hr>
+	<dialog id="modal" class="modalarea">
+		<span id="modalClose" class="modalclose">&times;</span>
+		<div class="modalhorizontal">
+			<div class="modalvertical">
+				<p id="modalCaption"></p>
+				<img id="modalImage" src="../pic/empty.png" alt="galeriipilt">
+			</div>
+		</div>
+	</dialog>
+	
+ <% if(photos.length === 0) { %>
+
+        <p>Sul ei ole veel ühtegi üles laaditud pilti.</p>
+
+    <% } else { %>
+
+        <div id="gallery" class="gallery">
+            <% photos.forEach(function(photo){ %>
+
+                <div class="galleryitem">
+                    <img
+                        src="<%= imagehref %><%= photo.filename %>"
+                        alt="<%= photo.alttext %>"
+                        data-filename="<%= photo.filename %>"
+                        class="thumbs">
+
+                    <p>
+                        <strong>Kirjeldus:</strong>
+                        <%= photo.alttext %>
+                    </p>
+
+                    <p>
+                        <strong>Privaatsus:</strong>
+                        <% if(photo.privacy == 1) { %>
+                            Privaatne
+                        <% } else if(photo.privacy == 3) { %>
+                            Avalik
+						<% } else if(photo.privacy == 2) { %>
+                            Sisseloginud kasutaja
+                        <% } else { %>
+                            Tundmatu
+                        <% } %>
+                    </p>
+                </div>
+            <% }); %>
+        </div>
+    <% } %>
+
+</body>
+</html>

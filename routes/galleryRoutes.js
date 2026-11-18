@@ -1,7 +1,17 @@
-const express = require("express");
-const router = express.Router();
-const galleryControllers = require("../controllers/galleryControllers");
+const express = require('express');
+const checkLogin = require('../src/checkLogin');
 
-router.get("/", galleryControllers.gallery);
+const router = express.Router();
+
+router.use(checkLogin.isLogin);
+
+const {
+    galleryPage,
+    myGalleryPage
+} = require('../controllers/galleryControllers');
+
+router.route('/').get(galleryPage);
+
+router.route('/mygallery').get(myGalleryPage);
 
 module.exports = router;

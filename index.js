@@ -7,12 +7,40 @@ const mysql = require('mysql2/promise');
 require('dotenv').config();
 
 const dateTime = require('./src/dateTimeET.js');
-
+const session = require('express-session');
+const MySQLStore = require('express-mysql-session')(session);
+const checkLogin = require('./src/checkLogin');
 const textRef = 'public/txt/vanasonad.txt';
 const regTextRef = 'public/txt/visits.txt';
 
 //käivitan express funktsiooni ja tähistan töötava asja nimega "app"
 const app = express();
+//määrame sessiooni halduse
+//esimene varjant kasutas default memorystore'i ja säilitas vaid ühe sessiooni korraga
+//app.use(session({secret: process.env.SES_SECRET, saveUninitialisezed: false, resave: true}));
+const sessionStore = new MySQLStore({
+			host: process.env.DB_HOST,
+			user: process.env.DB_USER,
+			password: process.env.DB_PASS,
+			database: 'if26_kaisa_sulg'
+		});
+app.use(session({
+	secret: process.env.SES_SECRET,
+	store: sessionStore,
+	saveUninitialisezed: false,
+	resave: false,
+	cookie: {
+		maxAge: 1000 * 60 * 1 //sessioon aegub tunniga
+	}
+}));
+
+app.use((req, res, next) => {
+    res.locals.userId = req.session.userId;
+    res.locals.userEmail = req.session.userEmail;
+    res.locals.firstName = req.session.firstName;
+    res.locals.lastName = req.session.lastName;
+    next();
+});
 //määrame veebilehe mallide järgi renderdamise mootori (EJS)
 app.set('view engine', 'ejs');
 //muudan "public" veebiserverile kättesaadavaks
@@ -37,11 +65,12 @@ app.get('/', async (req, res)=>{
 	res.render('index', {day: day, date: date, time: time, latestPhoto: result.length > 0 ? result[0] : null});
 });
 
-app.get('/home', async (req, res)=>{
+app.get('/home', checkLogin.isLogin, (req, res) => {
 	res.render('home');
 });
 
 app.get('/logout', async (req, res)=>{
+	req.session.destroy();
 	res.redirect('/');
 });
 
@@ -73,6 +102,9 @@ app.use('/galleryphotoupload', galleryPhotoUploadRouter);
 
 const galleryRouter = require('./routes/galleryRoutes');
 app.use('/fotogalerii', galleryRouter);
+
+const mygalleryRouter = require('./routes/mygalleryRoutes');
+app.use('/mygallery', mygalleryRouter);
 
 const signupRouter = require('./routes/signupRoutes');
 app.use('/signup', signupRouter);

@@ -1,12 +1,12 @@
 const mysql = require('mysql2/promise');
-const argon = require('argon2');
+const argon = require ('argon2');
 
 //@desc page for logging in
 //@route GET /signin
 //@access public
 
 const signinPage = (req, res) => {
-	res.render('signin', {notice: 'Ootan andmeid!'});
+	res.render('signin', {notice: 'Ootan konto andmeid!'});
 };
 
 //@desc page for logging in
@@ -17,23 +17,21 @@ const signinPagePost = async (req, res) => {
 	let conn;
 	let notice = '';
 	
-	//kontrollime kas kõik on olemas
-	if(!req.body.emailInput || !req.body.passwordInput) {
-		let notice = 'Andmeid on puudu!';
+	//kontrollime, kas kõik on olemas
+	if(!req.body.emailInput || !req.body.passwordInput){
+		notice = 'Andmeid on puudu!';
 		return res.render('signin', {notice: notice});
 	}
 	
 	try {
-		
 		conn = await mysql.createConnection({
 			host: process.env.DB_HOST,
 			user: process.env.DB_USER,
 			password: process.env.DB_PASS,
 			database: 'if26_kaisa_sulg'
 		});
-		
-		//kas selline on juba olemas
-		let sqlReq = 'SELECT id, password FROM users WHERE email = ?';
+		//kas selline on olemas
+		let sqlReq = 'SELECT id, firstname, lastname, email, password FROM users WHERE email = ?';
 		const [users] = await conn.execute(sqlReq, [req.body.emailInput]);
 		//kui pole
 		if(users.length === 0){
@@ -43,22 +41,26 @@ const signinPagePost = async (req, res) => {
 		const match = await argon.verify(users[0].password, req.body.passwordInput);
 		if(match){
 			console.log('Oled sisse loginud kasutaja ' + users[0].id);
+			//kأ¤ivitame sessiooni, salvestame sessioonimuutujad
+			req.session.userId = users[0].id;
+			req.session.userEmail = users[0].email;
+			req.session.firstName = users[0].firstname;
+			req.session.lastName = users[0].lastname;
 			return res.redirect('/home');
 		} else {
 			notice = 'Kasutajatunnus ja/või salasõna on vale!';
 			return res.render('signin', {notice: notice});
 		}
 	}
-	
 	catch (err) {
 		console.log('Viga: ' + err);
-		res.render('signin', {notice: 'Sisselogimine ebaõnnestus!'});
+		res.render('signin', {notice: 'Sisselogimine ei õnnestunud!'});
 	}
 	finally {
 		if(conn){
 			await conn.end();
 		}
-	}	
+	}
 };
 
 module.exports = {
